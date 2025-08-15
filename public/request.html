@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <title>Make Your Art!!!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Conveyor Belt Background -->
+    <div class="conveyor-bg">
+        <div class="tile-row" style="--speed: 40s"></div>
+        <div class="tile-row" style="--speed: 60s"></div>
+        <div class="tile-row" style="--speed: 80s"></div>
+    </div>
+    
+
+    <div class="content-overlay">
+        <div class="request-container">
+            <h1>Make Your Art !</h1>
+        
+            <form id="commissionForm">
+            <!-- Customer Info -->
+                <div class="form-group">
+                    <input type="text" id="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="phone" placeholder="Phone ">
+                </div>
+
+                 <!-- Art Details -->
+                <div class="form-group">
+                    <select id="size" required>
+                        <option value="">Select Size</option>
+                        <option value="Small (12x16)">Small (12x16)</option>
+                        <option value="Medium (18x24)">Medium (18x24)</option>
+                        <option value="Large (24x36)">Large (24x36)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <select id="type" required>
+                        <option value="">Select Art Type</option>
+                        <option value="Portrait">Portrait</option>
+                        <option value="Landscape">Landscape</option>
+                        <option value="Abstract">Abstract</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <textarea id="details" rows="4" placeholder="Special requests/details..." required></textarea>
+                </div>
+
+                <button type="submit">Send Request</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
