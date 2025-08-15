@@ -1,62 +1,92 @@
 <?php
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Artist's email
-    $to = "yourartistemail@gmail.com"; // CHANGE TO YOUR EMAIL
-    
+// Set content type
+header('Content-Type: application/json');
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Collect form data
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $phone = $_POST['phone'];
-    $size = $_POST['size'];
-    $type = $_POST['type'];
-    $details = $_POST['details'];
+    $name = filter_input(INPUT_POST, 'name', FILTER_SANITIZE_STRING);
+    $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+    $phone = filter_input(INPUT_POST, 'phone', FILTER_SANITIZE_STRING);
+    $size = filter_input(INPUT_POST, 'size', FILTER_SANITIZE_STRING);
+    $type = filter_input(INPUT_POST, 'type', FILTER_SANITIZE_STRING);
+    $details = filter_input(INPUT_POST, 'details', FILTER_SANITIZE_STRING);
     
-    // Email subject
+    // Validate required fields
+    if (empty($name) || empty($email) || empty($size) || empty($type)) {
+        echo json_encode(['error' => 'All required fields must be filled']);
+        exit;
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        echo json_encode(['error' => 'Invalid email format']);
+        exit;
+    }
+    
+    // Artist email (REPLACE WITH YOUR EMAIL)
+    $to = "your_email@example.com";
     $subject = "New Commission Request: $name";
     
-    // Email body
+    // Build email message
     $message = "
     <html>
     <head>
         <title>New Commission Request</title>
         <style>
-            body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
-            .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
-            h1 { color: #6e45e2; }
-            .detail { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+            body { font-family: Arial, sans-serif; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; }
+            h1 { color: #c19d5e; }
+            .detail { margin-bottom: 15px; }
+            .label { font-weight: bold; color: #c19d5e; }
         </style>
     </head>
     <body>
         <div class='container'>
             <h1>New Commission Request</h1>
             
-            <div class='detail'><strong>Client:</strong> $name</div>
-            <div class='detail'><strong>Email:</strong> $email</div>
-            <div class='detail'><strong>Phone:</strong> $phone</div>
-            <div class='detail'><strong>Size:</strong> $size</div>
-            <div class='detail'><strong>Type:</strong> $type</div>
-            <div class='detail'><strong>Details:</strong><br>$details</div>
-            
-            <p>You can reply directly to this email to contact the client.</p>
+            <div class='detail'>
+                <span class='label'>Client:</span> $name
+            </div>
+            <div class='detail'>
+                <span class='label'>Email:</span> $email
+            </div>
+            <div class='detail'>
+                <span class='label'>Phone:</span> " . ($phone ?: 'Not provided') . "
+            </div>
+            <div class='detail'>
+                <span class='label'>Size:</span> $size
+            </div>
+            <div class='detail'>
+                <span class='label'>Art Type:</span> $type
+            </div>
+            <div class='detail'>
+                <span class='label'>Details:</span><br>
+                " . nl2br($details) . "
+            </div>
         </div>
     </body>
     </html>
     ";
-
-    // Headers
+    
+    // Email headers
     $headers = "MIME-Version: 1.0\r\n";
     $headers .= "Content-type: text/html; charset=UTF-8\r\n";
     $headers .= "From: $email\r\n";
     $headers .= "Reply-To: $email\r\n";
-
+    $headers .= "X-Mailer: PHP/" . phpversion();
+    
     // Send email
     if (mail($to, $subject, $message, $headers)) {
-        echo "success";
+        // Send confirmation to client
+        $client_subject = "Commission Request Received";
+        $client_message = "Thank you for your commission request! We've received your details and will contact you soon.";
+        mail($email, $client_subject, $client_message);
+        
+        echo json_encode(['success' => true]);
     } else {
-        echo "error";
+        echo json_encode(['error' => 'Failed to send email. Please try again later.']);
     }
 } else {
-    echo "invalid request";
+    echo json_encode(['error' => 'Invalid request method']);
 }
 ?>
 

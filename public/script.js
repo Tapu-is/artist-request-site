@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Form submission handling
     const commissionForm = document.getElementById('commissionForm');
     if (commissionForm) {
-        commissionForm.addEventListener('submit', function(e) {
+        commissionForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const submitBtn = this.querySelector('button[type="submit"]');
@@ -103,13 +103,45 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
             
-            // Simulate form submission
-            setTimeout(() => {
-                alert('Request submitted successfully! The artist will contact you soon.');
-                commissionForm.reset();
+            try {
+                // Collect form data
+                const formData = {
+                    name: document.getElementById('name').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    size: document.getElementById('size').value,
+                    type: document.getElementById('type').value,
+                    details: document.getElementById('details').value
+                };
+                
+                // Send to PHP script
+                const response = await fetch('send_request.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(formData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Show success message
+                    commissionForm.innerHTML = `
+                        <div class="form-success">
+                            <h3>✓ Request Sent Successfully!</h3>
+                            <p>Check your email for confirmation. The artist will respond within 3 business days.</p>
+                            <a href="index.html" class="back-link">Back to Gallery</a>
+                        </div>
+                    `;
+                } else {
+                    throw new Error(result.error || 'Failed to submit request');
+                }
+            } catch (error) {
+                alert('Error: ' + error.message);
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
-            }, 1500);
+            }
         });
     }
 });
