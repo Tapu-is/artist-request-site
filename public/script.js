@@ -1,14 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // ====================================
-    // CONVEYOR BELT TILE FUNCTIONALITY
-    // ====================================
-    const initConveyor = (container) => {
+    // Initialize background tiles
+    function initBackgroundTiles() {
+        const container = document.querySelector('.background-tiles');
         const rows = container.querySelectorAll('.tile-row');
-        const tileWidth = 300;
+        const tileWidth = 400;
         const gap = 25;
         
         rows.forEach(row => {
-            const viewportWidth = container.clientWidth || window.innerWidth;
+            // Calculate tiles needed
+            const viewportWidth = window.innerWidth;
             const tilesPerScreen = Math.ceil(viewportWidth / (tileWidth + gap));
             const totalTiles = tilesPerScreen * 2;
             
@@ -18,13 +18,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 const tile = document.createElement('div');
                 tile.className = 'tile';
                 
-                // Add subtle pattern variation
-                if (i % 5 === 0) {
+                // Add subtle variation
+                if (i % 4 === 0) {
                     tile.style.backgroundImage = `
                         radial-gradient(
                             circle at 70% 30%,
                             rgba(255,255,255,0.03) 0%,
-                            transparent 50%
+                            transparent 60%
                         )
                     `;
                 }
@@ -32,24 +32,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 row.appendChild(tile);
             }
         });
-    };
-
-    // Initialize background and gallery
-    if (document.querySelector('.conveyor-bg')) {
-        initConveyor(document.querySelector('.conveyor-bg'));
-    }
-    if (document.querySelector('.gallery-container')) {
-        initConveyor(document.querySelector('.gallery-container'));
     }
 
-    // Responsive handling
+    // Initialize foreground gallery tiles
+    function initGalleryTiles() {
+        const container = document.querySelector('.gallery-tiles');
+        const tileWidth = 300;
+        const gap = 25;
+        
+        // Calculate tiles needed
+        const containerWidth = container.parentElement.clientWidth;
+        const tilesPerScreen = Math.ceil(containerWidth / (tileWidth + gap));
+        const totalTiles = tilesPerScreen * 2;
+        
+        // Clear and create tiles
+        container.innerHTML = '';
+        for (let i = 0; i < totalTiles; i++) {
+            const tile = document.createElement('div');
+            tile.className = 'gallery-tile';
+            
+            // Add content or images
+            tile.innerHTML = `<div class="tile-content">Artwork ${i+1}</div>`;
+            
+            container.appendChild(tile);
+        }
+    }
+
+    // Initialize both tile systems
+    initBackgroundTiles();
+    initGalleryTiles();
+
+    // Handle window resize
     window.addEventListener('resize', function() {
-        if (document.querySelector('.conveyor-bg')) {
-            initConveyor(document.querySelector('.conveyor-bg'));
-        }
-        if (document.querySelector('.gallery-container')) {
-            initConveyor(document.querySelector('.gallery-container'));
-        }
+        initBackgroundTiles();
+        initGalleryTiles();
     });
 
     // ====================================
