@@ -1,14 +1,15 @@
+/* style.css */
 /* ===== DARK THEME VARIABLES ===== */
 :root {
-    --bg-dark: #0a0a0a;
-    --bg-darker: #050505;
-    --tile-bg: #1e1e1e;
-    --tile-accent: #2a2a2a;
-    --text-primary: #e0e0e0;
-    --text-secondary: #aaaaaa;
-    --accent: #6e45e2;
-    --glow: rgba(110, 69, 226, 0.15);
-    --highlight: rgba(255, 255, 255, 0.05);
+    --bg-dark: #0f0f0f;
+    --bg-darker: #080808;
+    --tile-bg: #1a1a1a;
+    --tile-accent: #262626;
+    --text-primary: #e8e8e8;
+    --text-secondary: #a0a0a0;
+    --accent: #c19d5e; /* Sophisticated gold accent */
+    --glow: rgba(193, 157, 94, 0.2);
+    --highlight: rgba(255, 255, 255, 0.08);
     --gap: 25px;
     --tile-radius: 8px;
     --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -22,7 +23,7 @@
 }
 
 body {
-    background: var(--bg-darker);
+    background: linear-gradient(135deg, var(--bg-darker), var(--bg-dark));
     color: var(--text-primary);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     overflow-x: hidden;
@@ -40,13 +41,6 @@ body {
     height: 100%;
     z-index: -1;
     overflow: hidden;
-    mask-image: linear-gradient(
-        to bottom,
-        transparent 0%,
-        black 20%,
-        black 80%,
-        transparent 100%
-    );
 }
 
 .tile-row {
@@ -65,13 +59,14 @@ body {
     background: linear-gradient(135deg, var(--tile-bg), var(--tile-accent));
     border-radius: var(--tile-radius);
     flex-shrink: 0;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    opacity: 0.7;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    opacity: 0.8;
     transition: var(--transition);
+    border: 1px solid var(--highlight);
 }
 
 .tile-row:nth-child(1) {
-    top: 25%;
+    top: 20%;
     animation-direction: normal;
 }
 
@@ -94,7 +89,7 @@ body {
     background: linear-gradient(
         to bottom,
         var(--bg-darker) 0%,
-        rgba(5,5,5,0.8) 80%,
+        rgba(8, 8, 8, 0.7) 80%,
         transparent 100%
     );
 }
@@ -102,11 +97,9 @@ body {
 .dark-header h1 {
     font-size: clamp(2.5rem, 6vw, 3.5rem);
     margin: 0;
-    background: linear-gradient(90deg, #fff, #aaa);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    color: var(--text-primary);
     letter-spacing: -0.03em;
+    font-weight: 700;
     text-shadow: 0 0 15px rgba(0,0,0,0.5);
 }
 
@@ -137,6 +130,7 @@ body {
     border-radius: 12px;
     border: 1px solid var(--highlight);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: rgba(15, 15, 15, 0.5);
 }
 
 .gallery-tiles {
@@ -170,6 +164,7 @@ body {
 .gallery-tile:hover {
     transform: scale(1.05) translateY(-5px);
     box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    border-color: var(--accent);
 }
 
 .gallery-tile::before {
@@ -177,7 +172,7 @@ body {
     position: absolute;
     inset: 0;
     background: linear-gradient(135deg, 
-        rgba(255,255,255,0.05) 0%, 
+        rgba(255,255,255,0.03) 0%, 
         transparent 60%);
     z-index: 1;
 }
@@ -218,7 +213,7 @@ body {
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 3rem;
-    background: rgba(30, 30, 30, 0.8);
+    background: rgba(26, 26, 26, 0.7);
     backdrop-filter: blur(5px);
     padding: 2.5rem;
     border-radius: 16px;
@@ -228,7 +223,7 @@ body {
 }
 
 .artist-portrait {
-    background: linear-gradient(135deg, #1a1a1a, #252525);
+    background: linear-gradient(135deg, #1a1a1a, #222222);
     border-radius: 12px;
     min-height: 350px;
     display: flex;
@@ -241,7 +236,7 @@ body {
 .artist-portrait::before {
     content: 'M';
     font-size: 15rem;
-    color: rgba(255,255,255,0.05);
+    color: rgba(255,255,255,0.03);
     font-weight: 800;
 }
 
@@ -277,6 +272,7 @@ body {
 
 .artist-links a:hover {
     background: var(--accent);
+    color: #111;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px var(--glow);
     border-color: transparent;
@@ -291,29 +287,30 @@ body {
     background: linear-gradient(
         to top,
         var(--bg-darker) 0%,
-        rgba(5,5,5,0.8) 100%
+        rgba(8, 8, 8, 0.7) 100%
     );
     position: relative;
     z-index: 10;
     margin-top: 3rem;
 }
 
-/* ===== COMMISSION REQUEST PAGE ===== */
+/* ===== REQUEST PAGE STYLES ===== */
 .request-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
+    width: 100%;
     min-height: 100vh;
     display: flex;
-    flex-direction: column;
+    align-items: center;
     justify-content: center;
+    padding: 2rem;
     position: relative;
     z-index: 5;
 }
 
 .form-container {
-    background: rgba(30, 30, 30, 0.9);
+    background: rgba(26, 26, 26, 0.9);
     backdrop-filter: blur(10px);
+    width: 100%;
+    max-width: 600px;
     padding: 2.5rem;
     border-radius: 16px;
     border: 1px solid var(--highlight);
@@ -343,7 +340,7 @@ body {
 .form-group textarea {
     width: 100%;
     padding: 0.9rem;
-    background: var(--bg-dark);
+    background: rgba(15, 15, 15, 0.7);
     border: 1px solid var(--highlight);
     border-radius: 8px;
     color: var(--text-primary);
@@ -369,7 +366,7 @@ button[type="submit"] {
     width: 100%;
     padding: 1.1rem;
     background: var(--accent);
-    color: white;
+    color: #111;
     border: none;
     border-radius: 8px;
     font-weight: 600;
@@ -380,7 +377,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-    background: #5a35d6;
+    background: #d8b56c;
     transform: translateY(-3px);
     box-shadow: 0 8px 20px var(--glow);
 }
@@ -417,10 +414,6 @@ button[type="submit"]:hover {
         height: 300px;
     }
     
-    .form-container {
-        padding: 1.8rem;
-    }
-    
     .artist-links {
         flex-direction: column;
         gap: 1rem;
@@ -432,16 +425,6 @@ button[type="submit"]:hover {
 }
 
 @media (max-width: 480px) {
-    .background-tiles {
-        mask-image: linear-gradient(
-            to bottom,
-            transparent 0%,
-            black 15%,
-            black 85%,
-            transparent 100%
-        );
-    }
-    
     .tile {
         width: 300px;
     }
@@ -455,6 +438,6 @@ button[type="submit"]:hover {
     }
     
     .request-container {
-        padding: 2rem 1.5rem;
+        padding: 1.5rem;
     }
 }

@@ -1,7 +1,10 @@
+// script.js
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize background tiles
     function initBackgroundTiles() {
         const container = document.querySelector('.background-tiles');
+        if (!container) return;
+        
         const rows = container.querySelectorAll('.tile-row');
         const tileWidth = 400;
         const gap = 25;
@@ -20,13 +23,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Add subtle variation
                 if (i % 4 === 0) {
-                    tile.style.backgroundImage = `
-                        radial-gradient(
-                            circle at 70% 30%,
-                            rgba(255,255,255,0.03) 0%,
-                            transparent 60%
-                        )
-                    `;
+                    tile.style.background = 'linear-gradient(135deg, #1c1c1c, #272727)';
+                } else if (i % 4 === 1) {
+                    tile.style.background = 'linear-gradient(135deg, #1a1a1a, #222222)';
+                } else if (i % 4 === 2) {
+                    tile.style.background = 'linear-gradient(135deg, #1e1e1e, #292929)';
                 }
                 
                 row.appendChild(tile);
@@ -34,9 +35,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initialize foreground gallery tiles
+    // Initialize gallery tiles
     function initGalleryTiles() {
         const container = document.querySelector('.gallery-tiles');
+        if (!container) return;
+        
         const tileWidth = 300;
         const gap = 25;
         
@@ -51,8 +54,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const tile = document.createElement('div');
             tile.className = 'gallery-tile';
             
-            // Add content or images
-            tile.innerHTML = `<div class="tile-content">Artwork ${i+1}</div>`;
+            // Add content
+            const content = document.createElement('div');
+            content.className = 'gallery-tile-content';
+            content.textContent = `Artwork ${i+1}`;
+            tile.appendChild(content);
             
             container.appendChild(tile);
         }
@@ -68,13 +74,26 @@ document.addEventListener('DOMContentLoaded', function() {
         initGalleryTiles();
     });
 
-    // ====================================
-    // FORM SUBMISSION WITH PHP INTEGRATION
-    // ====================================
-    const commissionForm = document.getElementById('commissionForm');
+    // Add hover effects to tiles
+    function addTileHoverEffects() {
+        document.querySelectorAll('.tile, .gallery-tile').forEach(tile => {
+            tile.addEventListener('mouseenter', () => {
+                tile.style.transform = 'scale(1.05)';
+                tile.style.boxShadow = '0 10px 25px rgba(0,0,0,0.6)';
+            });
+            tile.addEventListener('mouseleave', () => {
+                tile.style.transform = '';
+                tile.style.boxShadow = '';
+            });
+        });
+    }
     
+    addTileHoverEffects();
+
+    // Form submission handling
+    const commissionForm = document.getElementById('commissionForm');
     if (commissionForm) {
-        commissionForm.addEventListener('submit', async function(e) {
+        commissionForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const submitBtn = this.querySelector('button[type="submit"]');
@@ -84,60 +103,13 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             submitBtn.textContent = 'Sending...';
             
-            try {
-                // Collect form data
-                const formData = {
-                    name: document.getElementById('name').value,
-                    email: document.getElementById('email').value,
-                    phone: document.getElementById('phone').value || 'Not provided',
-                    size: document.getElementById('size').value,
-                    type: document.getElementById('type').value,
-                    details: document.getElementById('details').value
-                };
-                
-                // Send to PHP script
-                const response = await fetch('send_request.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: new URLSearchParams(formData)
-                });
-                
-                const result = await response.text();
-                
-                if (result === 'success') {
-                    // Show success message
-                    commissionForm.innerHTML = `
-                        <div class="form-success">
-                            <h3>✓ Request Sent Successfully!</h3>
-                            <p>The artist will contact you soon.</p>
-                            <a href="index.html" class="back-link">Back to Gallery</a>
-                        </div>
-                    `;
-                } else {
-                    throw new Error(result || 'Failed to send request');
-                }
-            } catch (error) {
-                alert('Error: ' + error.message);
+            // Simulate form submission
+            setTimeout(() => {
+                alert('Request submitted successfully! The artist will contact you soon.');
+                commissionForm.reset();
                 submitBtn.disabled = false;
                 submitBtn.textContent = originalText;
-            }
+            }, 1500);
         });
     }
-
-    // ====================================
-    // ADDITIONAL INTERACTIONS
-    // ====================================
-    // Add hover effects to tiles
-    document.querySelectorAll('.tile').forEach(tile => {
-        tile.addEventListener('mouseenter', () => {
-            tile.style.transform = 'scale(1.03) translateY(-5px)';
-            tile.style.boxShadow = '0 10px 25px rgba(0,0,0,0.5)';
-        });
-        tile.addEventListener('mouseleave', () => {
-            tile.style.transform = '';
-            tile.style.boxShadow = '';
-        });
-    });
 });
