@@ -1,4 +1,4 @@
-/* ===== DARK THEME VARIABLES ===== */
+/* ===== DARK THEME ===== */
 :root {
     --bg-dark: #0a0a0a;
     --bg-darker: #050505;
@@ -7,9 +7,7 @@
     --text-primary: #e0e0e0;
     --text-secondary: #aaaaaa;
     --accent: #6e45e2;
-    --glow: rgba(110, 69, 226, 0.15);
-    --highlight: rgba(255, 255, 255, 0.05);
-    --gap: 20px;
+    --gap: 25px;
 }
 
 /* ===== BASE STYLES ===== */
@@ -18,19 +16,35 @@ body {
     background: var(--bg-darker);
     color: var(--text-primary);
     font-family: 'Inter', sans-serif;
-    line-height: 1.6;
     overflow-x: hidden;
 }
 
-/* ===== CONVEYOR BELT BACKGROUND ===== */
+.static-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-dark);
+    z-index: -2;
+}
+
+/* ===== CONVEYOR BELT ===== */
 .conveyor-bg {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     z-index: -1;
     overflow: hidden;
+    mask-image: linear-gradient(
+        to bottom,
+        transparent 0%,
+        black 20%,
+        black 80%,
+        transparent 100%
+    );
 }
 
 .tile-row {
@@ -43,19 +57,18 @@ body {
     will-change: transform;
 }
 
-.tile {
-    width: 300px;
-    height: 100%;
-    background: linear-gradient(135deg, var(--tile-bg), var(--tile-accent));
-    border-radius: 8px;
-    flex-shrink: 0;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-    border: 1px solid var(--highlight);
-    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+/* First row moves left-to-right */
+.tile-row:nth-child(1) {
+    top: 30%;
+    left: 0;
+    animation-direction: normal;
 }
 
-.tile:hover {
-    transform: scale(1.03);
+/* Second row moves right-to-left */
+.tile-row:nth-child(2) {
+    top: 60%;
+    left: 0;
+    animation-direction: reverse;
 }
 
 @keyframes scroll {
@@ -63,11 +76,40 @@ body {
     100% { transform: translateX(calc(-50% - var(--gap)/2)); }
 }
 
-/* Fade Edges */
+.tile {
+    width: 300px;
+    height: 100%;
+    background: linear-gradient(135deg, var(--tile-bg), var(--tile-accent));
+    border-radius: 8px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: transform 0.3s ease;
+}
+
+.tile:hover {
+    transform: scale(1.03);
+}
+
+/* ===== GALLERY CONTAINER ===== */
+.gallery-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    margin: 3rem 0;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.gallery-container .tile-row {
+    top: 0;
+    height: 100%;
+}
+
+/* Fade edges */
 .fade-left, .fade-right {
     position: absolute;
     top: 0;
-    width: 150px;
+    width: 100px;
     height: 100%;
     z-index: 2;
     pointer-events: none;
@@ -83,11 +125,21 @@ body {
     background: linear-gradient(270deg, var(--bg-dark), transparent);
 }
 
-/* Row Positioning */
-.tile-row:nth-child(1) { top: 10%; }
-.tile-row:nth-child(2) { top: 50%; transform: translateY(-50%); }
-.tile-row:nth-child(3) { bottom: 10%; }
+/* ===== HEADER STYLES ===== */
+.dark-header {
+    text-align: center;
+    padding: 5rem 2rem 3rem;
+    position: relative;
+    z-index: 1;
+    background: linear-gradient(
+        to bottom,
+        var(--bg-darker) 0%,
+        rgba(5,5,5,0.8) 80%,
+        transparent 100%
+    );
+}
 
+/* ... (keep your existing header, about section and footer styles) ... */
 /* ===== HEADER STYLES ===== */
 .dark-header {
     text-align: center;
